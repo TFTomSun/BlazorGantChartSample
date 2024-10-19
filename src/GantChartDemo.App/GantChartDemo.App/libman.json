@@ -1,0 +1,11 @@
+{
+  "defaultProvider": "jsdelivr",
+  "version": "1.0",
+  "libraries": [
+    {
+      "library": "apexcharts@3.54.1",
+      "files": [ "dist/**", "types/**" ],
+      "destination": "wwwroot/packages/apexcharts"
+    }
+  ]
+}
