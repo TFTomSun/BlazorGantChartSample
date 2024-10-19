@@ -4,29 +4,17 @@ using System.Text.Json;
 
 namespace GantChartDemo.App
 {
-    public static class GenericCallback
+    public static class GenericCallbackExtensions
     {
 
-        public static DotNetObjectReference<GenericCallback<TParameter>> AsCallback<TParameter>(this Func<TParameter,Task> callbackFunction)
+        public static IDisposable AsCallback<TParameter>(this Func<TParameter,Task> callbackFunction)
         {
             return DotNetObjectReference.Create(new GenericCallback<TParameter>(callbackFunction));
         }
-    }
-    public class GenericCallback<TParameter>
-    {
-        public GenericCallback(Func<TParameter,Task> handler)
+        private record GenericCallback<TParameter>(Func<TParameter, Task> Handler)
         {
-            Handler = handler;
+            [JSInvokable] public async Task Raise(TParameter paramter) => await this.Handler(paramter);
         }
-
-        public Func<TParameter, Task> Handler { get; }
-
-        [JSInvokable]
-        public async Task Raise(TParameter paramter)
-        {
-            await this.Handler(paramter);
-        }
-
     }
 
     public class GantChartInterop
