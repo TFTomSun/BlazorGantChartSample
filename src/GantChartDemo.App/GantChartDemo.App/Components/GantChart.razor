@@ -1,18 +1,25 @@
 ﻿@inject IJSRuntime Runtime;
+<div>Last Clicked: @this.LastClicked</div>
 
 <div @ref="GantChartContainer"></div>
 
 @code {
 	ElementReference GantChartContainer;
-	IJSObjectReference? gantChartContainer;
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		if (firstRender)
 		{
+			var gantChart = new GantChartInterop(this.Runtime, this.GantChartContainer);
 			var gantChartModule = await this.Runtime.InvokeAsync < IJSObjectReference>("import", "/GantChartInterop.js");
-			var gantChart = await gantChartModule.InvokeAsync<IJSObjectReference>("createGantChart", this.GantChartContainer);
-			await gantChart.InvokeVoidAsync("render");
+			await gantChart.RenderAsync(i =>
+			{
+				this.LastClicked = i;
+				this.StateHasChanged();
+				return Task.CompletedTask;
+			});
 		}
 	}
+
+	private int LastClicked;
 }
