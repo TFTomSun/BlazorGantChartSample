@@ -11,7 +11,6 @@
 		if (firstRender)
 		{
 			var gantChart = new GantChartInterop(this.Runtime, this.GantChartContainer);
-			var gantChartModule = await this.Runtime.InvokeAsync < IJSObjectReference>("import", "/GantChartInterop.js");
 			await gantChart.RenderAsync(i =>
 			{
 				this.LastClicked = i;
